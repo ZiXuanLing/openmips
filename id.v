@@ -22,12 +22,22 @@ module id (
     output reg[`RegBus] reg1_o,
     output reg[`RegBus] reg2_o,
     output reg[`RegAddrBus] wd_o,
-    output reg wreg_o
+    output reg wreg_o,
+
+    // 被写回的数据，数据前推(定向技术)
+    // 执行阶段
+    input wire ex_wreg_i,  
+    input wire[`RegBus] ex_wdata_i,
+    input wire[`RegAddrBus] ex_wd_i,
+    // 访存阶段
+    input wire mem_wreg_i,  
+    input wire[`RegBus] mem_wdata_i,
+    input wire[`RegAddrBus] mem_wd_i
 );
 
     wire[5:0] op = inst_i[31:26];  // 指令类型
     wire[4:0] op2 = inst_i[10:6];
-    wire[5:0] op3 = inst_i[5:0];
+    wire[5:0] op3 = inst_i[5:0];   // 功能码
     wire[4:0] op4 = inst_i[20:16];  // 目的寄存器地址
 
     reg[`RegBus] imm;  // 保存立即数
@@ -75,6 +85,12 @@ module id (
     always @(*) begin
         if (rst == `RstEnable) begin
             reg1_o <= `ZeroWord;
+        // 取执行的数据
+        end else if ((reg1_read_o == 1'b1) && (ex_wreg_i == 1'b1) && (ex_wd_i == reg1_addr_o)) begin
+            reg1_o <= ex_wdata_i;
+        // 取访存的数据
+        end else if ((reg1_read_o == 1'b1) && (mem_wreg_i == 1'b1) && (mem_wd_i == reg1_addr_o)) begin
+            reg1_o <= mem_wdata_i;
         end else if (reg1_read_o == 1'b1) begin
             reg1_o <= reg1_data_i;
         end else if (reg1_read_o == 1'b0) begin
@@ -87,6 +103,12 @@ module id (
     always @(*) begin
         if (rst == `RstEnable) begin
             reg2_o <= `ZeroWord;
+        // 取执行的数据
+        end else if ((reg2_read_o == 1'b1) && (ex_wreg_i == 1'b1) && (ex_wd_i == reg2_addr_o)) begin
+            reg1_o <= ex_wdata_i;
+        // 取访存的数据
+        end else if ((reg2_read_o == 1'b1) && (mem_wreg_i == 1'b1) && (mem_wd_i == reg2_addr_o)) begin
+            reg1_o <= mem_wdata_i;
         end else if (reg2_read_o == 1'b1) begin
             reg2_o <= reg1_data_i;
         end else if (reg2_read_o == 1'b0) begin
