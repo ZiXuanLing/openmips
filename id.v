@@ -190,7 +190,69 @@ module id (
                                 end else begin
                                     wreg_o <= `WriteDisable;
                                 end		  							
-                            end								  									
+                            end		
+                            `EXE_SLT: begin
+								wreg_o <= `WriteEnable;		
+                                aluop_o <= `EXE_SLT_OP;
+		  						alusel_o <= `EXE_RES_ARITHMETIC;		
+                                reg1_read_o <= 1'b1;	
+                                reg2_read_o <= 1'b1;
+		  						instvalid <= `InstValid;	
+							end
+							`EXE_SLTU: begin
+								wreg_o <= `WriteEnable;		
+                                aluop_o <= `EXE_SLTU_OP;
+		  						alusel_o <= `EXE_RES_ARITHMETIC;		
+                                reg1_read_o <= 1'b1;	
+                                reg2_read_o <= 1'b1;
+		  						instvalid <= `InstValid;	
+							end
+							`EXE_ADD: begin
+								wreg_o <= `WriteEnable;		
+                                aluop_o <= `EXE_ADD_OP;
+		  						alusel_o <= `EXE_RES_ARITHMETIC;		
+                                reg1_read_o <= 1'b1;	
+                                reg2_read_o <= 1'b1;
+		  						instvalid <= `InstValid;	
+							end
+							`EXE_ADDU: begin
+								wreg_o <= `WriteEnable;		
+                                aluop_o <= `EXE_ADDU_OP;
+		  						alusel_o <= `EXE_RES_ARITHMETIC;		
+                                reg1_read_o <= 1'b1;	
+                                reg2_read_o <= 1'b1;
+		  						instvalid <= `InstValid;	
+							end
+							`EXE_SUB: begin
+								wreg_o <= `WriteEnable;		
+                                aluop_o <= `EXE_SUB_OP;
+		  						alusel_o <= `EXE_RES_ARITHMETIC;		
+                                reg1_read_o <= 1'b1;	
+                                reg2_read_o <= 1'b1;
+		  						instvalid <= `InstValid;	
+							end
+							`EXE_SUBU: begin
+								wreg_o <= `WriteEnable;		
+                                aluop_o <= `EXE_SUBU_OP;
+		  						alusel_o <= `EXE_RES_ARITHMETIC;		
+                                reg1_read_o <= 1'b1;	
+                                reg2_read_o <= 1'b1;
+		  						instvalid <= `InstValid;	
+							end
+							`EXE_MULT: begin
+								wreg_o <= `WriteDisable;		
+                                aluop_o <= `EXE_MULT_OP;
+		  						reg1_read_o <= 1'b1;	
+                                reg2_read_o <= 1'b1; 
+                                instvalid <= `InstValid;	
+							end
+							`EXE_MULTU: begin
+								wreg_o <= `WriteDisable;		
+                                aluop_o <= `EXE_MULTU_OP;
+		  						reg1_read_o <= 1'b1;	
+                                reg2_read_o <= 1'b1; 
+                                instvalid <= `InstValid;	
+							end						  									
 						    default:	begin
 						    end
 						  endcase
@@ -246,10 +308,110 @@ module id (
                 reg1_read_o <= 1'b0;	
                 reg2_read_o <= 1'b0;	  	  	
 				instvalid <= `InstValid;	
-			end										  	
+			end			
+            `EXE_SLTI: begin
+		  		wreg_o <= `WriteEnable;		
+                aluop_o <= `EXE_SLT_OP;
+		  		alusel_o <= `EXE_RES_ARITHMETIC; 
+                reg1_read_o <= 1'b1;	
+                reg2_read_o <= 1'b0;	  	
+				imm <= {{16{inst_i[15]}}, inst_i[15:0]};		
+                wd_o <= inst_i[20:16];		  	
+				instvalid <= `InstValid;	
+			end
+			`EXE_SLTIU:	begin
+		  		wreg_o <= `WriteEnable;		
+                aluop_o <= `EXE_SLTU_OP;
+		  		alusel_o <= `EXE_RES_ARITHMETIC; 
+                reg1_read_o <= 1'b1;	
+                reg2_read_o <= 1'b0;	  	
+				imm <= {{16{inst_i[15]}}, inst_i[15:0]};		
+                wd_o <= inst_i[20:16];		  	
+				instvalid <= `InstValid;	
+			end
+			`EXE_ADDI: begin
+		  		wreg_o <= `WriteEnable;		
+                aluop_o <= `EXE_ADDI_OP;
+		  		alusel_o <= `EXE_RES_ARITHMETIC; 
+                reg1_read_o <= 1'b1;	
+                reg2_read_o <= 1'b0;	  	
+				imm <= {{16{inst_i[15]}}, inst_i[15:0]};		
+                wd_o <= inst_i[20:16];		  	
+				instvalid <= `InstValid;	
+			end
+			`EXE_ADDIU: begin
+		  		wreg_o <= `WriteEnable;		
+                aluop_o <= `EXE_ADDIU_OP;
+		  		alusel_o <= `EXE_RES_ARITHMETIC; 
+                reg1_read_o <= 1'b1;	
+                reg2_read_o <= 1'b0;	  	
+				imm <= {{16{inst_i[15]}}, inst_i[15:0]};		
+                wd_o <= inst_i[20:16];		  	
+				instvalid <= `InstValid;	
+			end		
+            `EXE_SPECIAL2_INST:	begin
+					case ( op3 )
+						`EXE_CLZ: begin
+							wreg_o <= `WriteEnable;		
+                            aluop_o <= `EXE_CLZ_OP;
+		  				    alusel_o <= `EXE_RES_ARITHMETIC; 
+                            reg1_read_o <= 1'b1;	
+                            reg2_read_o <= 1'b0;	  	
+							instvalid <= `InstValid;	
+						end
+						`EXE_CLO: begin
+							wreg_o <= `WriteEnable;		
+                            aluop_o <= `EXE_CLO_OP;
+		  				    alusel_o <= `EXE_RES_ARITHMETIC; 
+                            reg1_read_o <= 1'b1;	
+                            reg2_read_o <= 1'b0;	  	
+							instvalid <= `InstValid;	
+						end
+						`EXE_MUL: begin
+							wreg_o <= `WriteEnable;		
+                            aluop_o <= `EXE_MUL_OP;
+		  				    alusel_o <= `EXE_RES_MUL; 
+                            reg1_read_o <= 1'b1;	
+                            reg2_read_o <= 1'b1;	
+		  				    instvalid <= `InstValid;	  			
+						end
+						default: begin
+						end
+					endcase      //EXE_SPECIAL_INST2 case
+			end					  	
 		    default: begin
 		    end
-		  endcase	
+		endcase	
+        if (inst_i[31:21] == 11'b00000000000) begin
+		  	if (op3 == `EXE_SLL) begin
+		  		    wreg_o <= `WriteEnable;		
+                    aluop_o <= `EXE_SLL_OP;
+		  		    alusel_o <= `EXE_RES_SHIFT; 
+                    reg1_read_o <= 1'b0;	
+                    reg2_read_o <= 1'b1;	  	
+					imm[4:0] <= inst_i[10:6];		
+                    wd_o <= inst_i[15:11];
+					instvalid <= `InstValid;	
+				end else if ( op3 == `EXE_SRL ) begin
+		  		    wreg_o <= `WriteEnable;		
+                    aluop_o <= `EXE_SRL_OP;
+		  		    alusel_o <= `EXE_RES_SHIFT; 
+                    reg1_read_o <= 1'b0;	
+                    reg2_read_o <= 1'b1;	  	
+					imm[4:0] <= inst_i[10:6];		
+                    wd_o <= inst_i[15:11];
+					instvalid <= `InstValid;	
+				end else if ( op3 == `EXE_SRA ) begin
+		  		    wreg_o <= `WriteEnable;		
+                    aluop_o <= `EXE_SRA_OP;
+		  		    alusel_o <= `EXE_RES_SHIFT; 
+                    reg1_read_o <= 1'b0;	
+                    reg2_read_o <= 1'b1;	  	
+					imm[4:0] <= inst_i[10:6];		
+                    wd_o <= inst_i[15:11];
+					instvalid <= `InstValid;	
+				end
+			end
         end
     end
     
@@ -257,10 +419,14 @@ module id (
         if (rst == `RstEnable) begin
             reg1_o <= `ZeroWord;
         // 取执行的数据
-        end else if ((reg1_read_o == 1'b1) && (ex_wreg_i == 1'b1) && (ex_wd_i == reg1_addr_o)) begin
+        end else if ((reg1_read_o == 1'b1) && 
+                     (ex_wreg_i == 1'b1) && 
+                     (ex_wd_i == reg1_addr_o)) begin
             reg1_o <= ex_wdata_i;
         // 取访存的数据
-        end else if ((reg1_read_o == 1'b1) && (mem_wreg_i == 1'b1) && (mem_wd_i == reg1_addr_o)) begin
+        end else if ((reg1_read_o == 1'b1) && 
+                     (mem_wreg_i == 1'b1) && 
+                     (mem_wd_i == reg1_addr_o)) begin
             reg1_o <= mem_wdata_i;
         end else if (reg1_read_o == 1'b1) begin
             reg1_o <= reg1_data_i;
@@ -275,10 +441,14 @@ module id (
         if (rst == `RstEnable) begin
             reg2_o <= `ZeroWord;
         // 取执行的数据
-        end else if ((reg2_read_o == 1'b1) && (ex_wreg_i == 1'b1) && (ex_wd_i == reg2_addr_o)) begin
+        end else if ((reg2_read_o == 1'b1) && 
+                     (ex_wreg_i == 1'b1) && 
+                     (ex_wd_i == reg2_addr_o)) begin
             reg1_o <= ex_wdata_i;
         // 取访存的数据
-        end else if ((reg2_read_o == 1'b1) && (mem_wreg_i == 1'b1) && (mem_wd_i == reg2_addr_o)) begin
+        end else if ((reg2_read_o == 1'b1) && 
+                     (mem_wreg_i == 1'b1) && 
+                     (mem_wd_i == reg2_addr_o)) begin
             reg1_o <= mem_wdata_i;
         end else if (reg2_read_o == 1'b1) begin
             reg2_o <= reg1_data_i;

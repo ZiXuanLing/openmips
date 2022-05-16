@@ -8,6 +8,7 @@
 module pc_reg (
     input wire clk,  // 时钟信号
     input wire rst,  // 复位信号
+    input wire[5:0] stall,  // 来自控制模块CTRL
 
     output reg[`InstAddrBus] pc,  // pc
     output reg ce  // 指令存储器使能信号
@@ -23,7 +24,8 @@ module pc_reg (
     always @(posedge clk) begin
         if (ce == `ChipDisable) begin
             pc <= 32'h00000000;
-        end else begin
+        // 当stall[0]为NoStop时，pc加4，否则，pc保持不变
+        end else if (stall[0] == `NoStop) begin
             pc <= pc + 4'h4;
         end
     end
