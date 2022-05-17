@@ -24,21 +24,28 @@ module ex_mem(
 	output reg[`RegBus]					 mem_wdata,
 	output reg[`RegBus]          mem_hi,
 	output reg[`RegBus]          mem_lo,
-	output reg                   mem_whilo	
+	output reg                   mem_whilo,
 	
-	
+	input wire[5:0] stall
 );
 
 
 	always @ (posedge clk) begin
 		if(rst == `RstEnable) begin
-		  mem_wd <= `NOPRegAddr;
-		  mem_wreg <= `WriteDisable;
-		  mem_wdata <= `ZeroWord;	
-		  mem_hi <= `ZeroWord;
-		  mem_lo <= `ZeroWord;
-		  mem_whilo <= `WriteDisable;		  
-		end else begin
+		    mem_wd <= `NOPRegAddr;
+		    mem_wreg <= `WriteDisable;
+		    mem_wdata <= `ZeroWord;	
+		    mem_hi <= `ZeroWord;
+		    mem_lo <= `ZeroWord;
+		    mem_whilo <= `WriteDisable;	
+		end else if (stall[3] == `Stop && stall[4] == `NoStop) begin
+		    mem_wd <= `NOPRegAddr;
+		    mem_wreg <= `WriteDisable;
+		    mem_wdata <= `ZeroWord;	
+		    mem_hi <= `ZeroWord;
+		    mem_lo <= `ZeroWord;
+		    mem_whilo <= `WriteDisable;				  
+		end else if (stall[3] == `NoStop) begin
 			mem_wd <= ex_wd;
 			mem_wreg <= ex_wreg;
 			mem_wdata <= ex_wdata;	

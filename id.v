@@ -261,7 +261,7 @@ module id (
 						end
 					endcase	
 					end									  
-		  	`EXE_ORI: begin                        //ORI指令
+            `EXE_ORI: begin                        //ORI指令
 		  		wreg_o <= `WriteEnable;		
                 aluop_o <= `EXE_OR_OP;
 		  		alusel_o <= `EXE_RES_LOGIC; 
@@ -377,6 +377,38 @@ module id (
 						end
 						default: begin
 						end
+                        `EXE_MADD: begin
+                            wreg_o <= `WriteDisable;
+                            aluop_o <= `EXE_MADD_OP;
+                            alusel_o <= `EXE_RES_MUL;
+                            reg1_read_o <= 1'b1;
+                            reg2_read_o <= 1'b1;
+                            instvalid <= `InstValid;
+                        end
+                        `EXE_MADDU: begin
+                            wreg_o <= `WriteDisable;
+                            aluop_o <= `EXE_MADDU_OP;
+                            alusel_o <= `EXE_RES_MUL;
+                            reg1_read_o <= 1'b1;
+                            reg2_read_o <= 1'b1;
+                            instvalid <= `InstValid;
+                        end
+                        `EXE_MSUB: begin
+                            wreg_o <= `WriteDisable;
+                            aluop_o <= `EXE_MSUB_OP;
+                            alusel_o <= `EXE_RES_MUL;
+                            reg1_read_o <= 1'b1;
+                            reg2_read_o <= 1'b1;
+                            instvalid <= `InstValid;
+                        end
+                        `EXE_MSUBU: begin
+                            wreg_o <= `WriteDisable;
+                            aluop_o <= `EXE_MSUBU_OP;
+                            alusel_o <= `EXE_RES_MUL;
+                            reg1_read_o <= 1'b1;
+                            reg2_read_o <= 1'b1;
+                            instvalid <= `InstValid;
+                        end
 					endcase      //EXE_SPECIAL_INST2 case
 			end					  	
 		    default: begin

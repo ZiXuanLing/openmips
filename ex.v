@@ -6,7 +6,7 @@
 
 module ex(
 
-	input wire										rst,
+	input wire rst,
 	
 	//送到执行阶段的信息
 	input wire[`AluOpBus]         aluop_i,
@@ -32,12 +32,21 @@ module ex(
 	
 	output reg[`RegAddrBus]       wd_o,
 	output reg                    wreg_o,
-	output reg[`RegBus]						wdata_o,
+	output reg[`RegBus]			  wdata_o,
 
 	output reg[`RegBus]           hi_o,
 	output reg[`RegBus]           lo_o,
-	output reg                    whilo_o	
+	output reg                    whilo_o,
+
+	// input wire[5:0] stall
 	
+	input wire[`DoubleRegBus] hilo_temp_i,
+	input wire[1:0] cnt_i,
+
+	output reg[`DoubleRegBus] hilo_temp_o,
+	output reg[1:0] cnt_o,
+
+	output reg stallreq
 );
 
 	reg[`RegBus] logicout;
