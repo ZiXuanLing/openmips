@@ -49,7 +49,10 @@ module ex(
 	output reg                    div_start_o,
 	output reg                    signed_div_o,
 
-	output reg										stallreq       			
+	output reg stallreq,
+
+	input wire[`RegBus] link_address_i,  // 处于执行阶段的转移指令要保存的返回地址
+	input wire is_in_delayslot_i		// 当前执行阶段的指令是否位于延迟槽
 	
 );
 
@@ -357,37 +360,39 @@ module ex(
 	  end
 	end	 
 
- always @ (*) begin
-	 wd_o <= wd_i;
-	 	 	 	
-	 if(((aluop_i == `EXE_ADD_OP) || (aluop_i == `EXE_ADDI_OP) || 
-	      (aluop_i == `EXE_SUB_OP)) && (ov_sum == 1'b1)) begin
-	 	wreg_o <= `WriteDisable;
-	 end else begin
-	  wreg_o <= wreg_i;
-	 end
-	 
-	 case ( alusel_i ) 
-	 	`EXE_RES_LOGIC:		begin
-	 		wdata_o <= logicout;
-	 	end
-	 	`EXE_RES_SHIFT:		begin
-	 		wdata_o <= shiftres;
-	 	end	 	
-	 	`EXE_RES_MOVE:		begin
-	 		wdata_o <= moveres;
-	 	end	 	
-	 	`EXE_RES_ARITHMETIC:	begin
-	 		wdata_o <= arithmeticres;
-	 	end
-	 	`EXE_RES_MUL:		begin
-	 		wdata_o <= mulres[31:0];
-	 	end	 	
-	 	default:					begin
-	 		wdata_o <= `ZeroWord;
-	 	end
-	 endcase
- end	
+	always @ (*) begin
+		wd_o <= wd_i;
+					
+		if(((aluop_i == `EXE_ADD_OP) || (aluop_i == `EXE_ADDI_OP) || 
+			(aluop_i == `EXE_SUB_OP)) && (ov_sum == 1'b1)) begin
+			wreg_o <= `WriteDisable;
+		end else begin
+		wreg_o <= wreg_i;
+		end
+		
+		case ( alusel_i ) 
+			`EXE_RES_LOGIC:		begin
+				wdata_o <= logicout;
+			end
+			`EXE_RES_SHIFT:		begin
+				wdata_o <= shiftres;
+			end	 	
+			`EXE_RES_MOVE:		begin
+				wdata_o <= moveres;
+			end	 	
+			`EXE_RES_ARITHMETIC:	begin
+				wdata_o <= arithmeticres;
+			end
+			`EXE_RES_MUL:		begin
+				wdata_o <= mulres[31:0];
+			end	 	
+			`EXE_RES_JUMP_BRANCH:
+				wdata_o <= link_address_i;
+			default:					begin
+				wdata_o <= `ZeroWord;
+			end
+		endcase
+	end	
 
 	always @ (*) begin
 		if(rst == `RstEnable) begin

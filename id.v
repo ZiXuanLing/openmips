@@ -294,7 +294,7 @@ module id(
 			            	        branch_target_address_o <= reg1_o;
 			            	        branch_flag_o <= `Branch;
 			           
-			                        next_inst_in_delayslot_o <= `InDelaySlot;
+			                        next_inst_in_delayslot_o <= `InDelaySlot;  
 			                        instvalid <= `InstValid;	
 								end
 								`EXE_JALR: begin
@@ -676,6 +676,7 @@ module id(
         end
 	end
 
+    // 输出变量is_in_delayslot_o表示当前译码阶段指令是否是延迟槽指令
 	always @ (*) begin
 		if(rst == `RstEnable) begin
 			is_in_delayslot_o <= `NotInDelaySlot;
